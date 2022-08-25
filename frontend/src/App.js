@@ -1,18 +1,45 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import { AdminRoute, ProtectedRoute } from "./utils/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+import SignupPage from "./pages/SignupPage";
+import AdminLogin from "./pages/AdminLogin";
+import AdminHome from "./pages/AdminHome";
+import AdminNavbar from "./components/AdminNavbar";
+import EditUser from "./components/EditUser";
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/" exact element={<HomePage/>}  />
-          <Route element={<LoginPage/>} path="/login" />
-          
-        </Routes>
-      </Router>
+      <AuthProvider>
+      <Routes>
+        <Route
+          path="/"
+          exact
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path='/signup' element={<SignupPage/>} />
+        <Route path="/admin" element={<AdminLogin/>}  />
+        <Route path="/adminhome" element={
+          <AdminRoute>
+            <AdminNavbar/>
+               <AdminHome />
+          </AdminRoute>
+        
+      }  />
+      <Route path="/userupdate/:id" element={<EditUser/>}/>
+      </Routes>
+
+      </AuthProvider>
+
+
     </div>
   );
 }
